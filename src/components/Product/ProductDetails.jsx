@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router";
 import Getdata from "../Getdata.js";
 import CardProductDetails from "../CardProduct/CardProductDetails.jsx";
 // import { useNavigate } from "react-router";
-import FilterByCategoies from "./FilterByCategoies.jsx";
+// import FilterByCategoies from "./FilterByCategoies.jsx";
 export default function ProductDetails() {
   const [productDetails, setProductDetails] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
@@ -38,7 +38,7 @@ export default function ProductDetails() {
     <div className="p-4 w-7xl  mx-auto h-[90vh] grid place-content-center">
       
       <CardProductDetails
-        thumbnail={productDetails.thumbnail}
+        thumbnail={productDetails.images}
         title={productDetails.title}
         description={productDetails.description}
         price={productDetails.price}

@@ -7,13 +7,15 @@ import {
 } from "flowbite-react";
 // import { Link } from "react-router-dom";
 import MiniLogo from "../assets/MiniLogo.jpg";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 export default function NavbarComponent() {
   const navigation = [
     { path: "/", menu: "Home" },
     { path: "/about", menu: "About" },
     { path: "/contact", menu: "Contact" },
-
+    { path: "/login", menu: "Login" },
+    { path: "/register", menu: "Register" },
+    { path: "/profile", menu: "Profile" },
   ];
   
   return (
@@ -31,7 +33,7 @@ export default function NavbarComponent() {
       <NavbarToggle />
       <NavbarCollapse>
         {navigation.map((nav) => (
-          <NavLink  to={nav.path}>{nav.menu}</NavLink>
+          <NavLink key={nav.path} to={nav.path}>{nav.menu}</NavLink>
         ))}
       </NavbarCollapse>
     </Navbar>

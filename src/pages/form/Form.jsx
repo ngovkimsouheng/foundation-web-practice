@@ -1,125 +1,147 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export function Form() {
-  // Store input values
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+import CreateData from "../utils/CreateData";
 
-  // Store error messages
-  const [errors, setErrors] = useState({ email: "", password: "" });
+const schema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  price: z.number().positive("Price must be > 0"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  categoryId: z.number().int("CategoryId must be an integer"),
+  imageUrl: z.string().url("Invalid image URL"),
+});
 
-  // Validate inputs and return an object of errors
-  const validate = () => {
-    const newErrors = { email: "", password: "" };
+export default function Form() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      title: "",
+      price: 0,
+      description: "",
+      categoryId: 1,
+      imageUrl: "",
+    },
+  });
 
-    // Check email empty
-    if (!email.trim()) {
-      newErrors.email = "Email is required";
+  const onSubmit = async (values) => {
+    try {
+      // Convert imageUrl -> images array (API expects images: string[])
+      const payload = { ...values, images: [values.imageUrl] };
+      delete payload.imageUrl;
+
+      await CreateData(payload);
+      reset();
+    } catch (e) {
+      setError("root", { message: e?.message || "Failed to create product" });
     }
-    // Check email format
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    // Check password empty
-    if (!password.trim()) {
-      newErrors.password = "Password is required";
-    }
-    // Check password length
-    else if (password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    }
-
-    return newErrors;
-  };
-
-  // Run when user submits the form
-  const handleSubmit = (e) => {
-    e.preventDefault(); // stop refresh
-
-    const newErrors = validate(); // get validation result
-    setErrors(newErrors); // show errors in UI
-
-    // Check if there is any error message
-    const hasError = Object.values(newErrors).some((msg) => msg !== "");
-    if (hasError) return; // stop submit if invalid
-
-    // If valid -> success
-    console.log(`Email: ${email}, Password: ${password}`);
-  };
-
-  // Clear email error when user types
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value); // update email
-    setErrors((prev) => ({ ...prev, email: "" })); // clear email error
-  };
-
-  // Clear password error when user types
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value); // update password
-    setErrors((prev) => ({ ...prev, password: "" })); // clear password error
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-sm mt-2 mx-auto  p-6 bg-white rounded-[24px] shadow-lg"
-    >
-      <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
-        Login
-      </h2>
+    <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow">
+      <h2 className="text-2xl font-semibold mb-6">Create Product</h2>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Email
-        </label>
-        <input
-          type="email"
-          value={email}
-          onChange={handleEmailChange}
-          className={`w-full px-3 py-2 border rounded-[16px] outline-none transition
-          ${
-            errors.email
-              ? "border-red-500 focus:ring-2 focus:ring-red-300"
-              : "border-gray-300 focus:ring-2 focus:ring-blue-300"
-          }`}
-          placeholder="example@email.com"
-        />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Title */}
+        <div>
+          <label className="block text-start text-sm font-medium mb-1">
+            Title
+          </label>
+          <input
+            {...register("title")}
+            className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.title && (
+            <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+          )}
+        </div>
+
+        {/* Price */}
+        <div>
+          <label className="block text-start text-sm font-medium mb-1">
+            Price
+          </label>
+          <input
+            type="number"
+            {...register("price", { valueAsNumber: true })}
+            className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.price && (
+            <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
+          )}
+        </div>
+
+        {/* Description */}
+        <div>
+          <label className="block text-start text-sm font-medium mb-1">
+            Description
+          </label>
+          <textarea
+            rows={4}
+            {...register("description")}
+            className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.description && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.description.message}
+            </p>
+          )}
+        </div>
+
+        {/* Category ID */}
+        <div>
+          <label className="block text-start text-sm font-medium mb-1">
+            Category ID
+          </label>
+          <input
+            type="number"
+            {...register("categoryId", { valueAsNumber: true })}
+            className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.categoryId && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.categoryId.message}
+            </p>
+          )}
+        </div>
+
+        {/* Image URL */}
+        <div>
+          <label className="block text-start text-sm font-medium mb-1">
+            Image URL
+          </label>
+          <input
+            {...register("imageUrl")}
+            className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {errors.imageUrl && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.imageUrl.message}
+            </p>
+          )}
+        </div>
+
+        {/* Submit */}
+        <button
+          disabled={isSubmitting}
+          className="w-full rounded bg-blue-600 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? "Posting..." : "Create"}
+        </button>
+
+        {/* Form-level error */}
+        {errors.root && (
+          <p className="text-center text-sm text-red-600">
+            {errors.root.message}
+          </p>
         )}
-      </div>
-
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Password
-        </label>
-        <input
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-          className={`w-full px-3 py-2 border rounded-[16px] outline-none transition
-          ${
-            errors.password
-              ? "border-red-500 focus:ring-2 focus:ring-red-300"
-              : "border-gray-300 focus:ring-2 focus:ring-blue-300"
-          }`}
-          placeholder="••••••••"
-        />
-        {errors.password && (
-          <p className="mt-1 text-sm text-red-500">{errors.password}</p>
-        )}
-      </div>
-
-      <button
-        type="submit"
-        className="w-full bg-blue-600 text-white py-2 rounded-[16px] font-medium
-                 hover:bg-blue-700 active:scale-[0.98] transition"
-      >
-        Login
-      </button>
-    </form>
+      </form>
+    </div>
   );
 }
-
-export default Form;

@@ -62,10 +62,10 @@ function NativeForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-sm mx-auto   p-6 bg-white rounded-xl shadow-lg"
+      className="max-w-7xl mx-auto    p-6 bg-white rounded-xl shadow-lg"
     >
       <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
-        Login 
+        Login
       </h2>
 
       <div className="mb-4">

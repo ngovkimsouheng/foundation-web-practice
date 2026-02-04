@@ -1,14 +1,26 @@
+
 import React from "react";
 import Getdata from "../Getdata.js";
 import LoadingComponent from "../LoadingComponent.jsx";
 import CardProduct from "../CardProduct/CardProduct.jsx";
 import { useParams } from "react-router";
+import DeleteData from "../../pages/utils/DeleteData";
 
 export default function Products() {
   const [products, setProducts] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const { categoryName } = useParams();
   const category = categoryName || null;
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    try {
+      await DeleteData(id);
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+    } catch (error) {
+      alert("Delete failed: " + error.message);
+    }
+  };
 
   React.useEffect(() => {
     async function fetchProducts() {
@@ -22,7 +34,8 @@ export default function Products() {
           setProducts(data.products || data); // dummyjson returns {products:[]} or []
         } else {
           data = await Getdata("products");
-          setProducts(data.products);
+          setProducts(data);
+          console.log(data)
         }
       } catch (error) {
         console.error(error);
@@ -50,11 +63,12 @@ export default function Products() {
         products.map((product) => (
           <CardProduct
             key={product.id}
-            image={product.thumbnail}
+            image={product.images}
             category={product.category}
             title={product.title}
             description={product.description}
             price={product.price}
+            onDelete={handleDelete}
             id={product.id}
           />
         ))
