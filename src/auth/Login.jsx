@@ -67,17 +67,12 @@ export default function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow">
-      <div className="flex justify-between mb-4">
-        <Link
-          to="/login"
-          className="px-4 py-2 rounded bg-blue-600 text-white font-medium hover:bg-blue-700"
-        >
-          Login
-        </Link>
+    <div className="max-w-7xl my-30 mx-auto p-6 bg-white rounded-lg shadow">
+      <div className="flex justify-end mb-4">
+    
         <Link
           to="/register"
-          className="px-4 py-2 rounded bg-green-600 text-white font-medium hover:bg-green-700"
+          className="px-4  py-2 rounded bg-green-600 text-white font-medium hover:bg-green-700"
         >
           Register
         </Link>

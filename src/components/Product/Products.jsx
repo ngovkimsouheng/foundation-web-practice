@@ -1,4 +1,3 @@
-
 import React from "react";
 import Getdata from "../Getdata.js";
 import LoadingComponent from "../LoadingComponent.jsx";
@@ -13,7 +12,8 @@ export default function Products() {
   const category = categoryName || null;
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this product?")) return;
+    if (!window.confirm("Are you sure you want to delete this product?"))
+      return;
     try {
       await DeleteData(id);
       setProducts((prev) => prev.filter((p) => p.id !== id));
@@ -35,7 +35,7 @@ export default function Products() {
         } else {
           data = await Getdata("products");
           setProducts(data);
-          console.log(data)
+          console.log(data);
         }
       } catch (error) {
         console.error(error);

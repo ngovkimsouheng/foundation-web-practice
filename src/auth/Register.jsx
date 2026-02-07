@@ -25,7 +25,7 @@ export default function Register({ onRegister }) {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow">
+    <div className="max-w-7xl my-10 mx-auto p-6 bg-white rounded-lg shadow">
       <h2 className="text-2xl font-semibold mb-6">Register</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -33,7 +33,7 @@ export default function Register({ onRegister }) {
           <input
             type="text"
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             className="w-full rounded border border-gray-300 px-3 py-2"
             required
           />
@@ -43,7 +43,7 @@ export default function Register({ onRegister }) {
           <input
             type="email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded border border-gray-300 px-3 py-2"
             required
           />
@@ -53,7 +53,7 @@ export default function Register({ onRegister }) {
           <input
             type="password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full rounded border border-gray-300 px-3 py-2"
             required
           />
@@ -63,11 +63,13 @@ export default function Register({ onRegister }) {
           <input
             type="url"
             value={avatar}
-            onChange={e => setAvatar(e.target.value)}
+            onChange={(e) => setAvatar(e.target.value)}
             className="w-full rounded border border-gray-300 px-3 py-2"
           />
         </div>
-        <button className="w-full rounded bg-green-600 py-2 text-white font-medium hover:bg-green-700">Register</button>
+        <button className="w-full rounded bg-green-600 py-2 text-white font-medium hover:bg-green-700">
+          Register
+        </button>
         {error && <p className="text-red-600 text-center">{error}</p>}
       </form>
     </div>

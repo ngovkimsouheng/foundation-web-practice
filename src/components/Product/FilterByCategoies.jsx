@@ -8,7 +8,7 @@
 //   useEffect(() => {
 //     async function fetchCategories() {
 //       try {
-//         const data = await Getdata("products/categories");
+//         const data = await Getdata("products/categories"); // dummy json
 //         setCategories(data);
 //         console.log(data);
 //       } catch (error) {
